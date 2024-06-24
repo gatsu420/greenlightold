@@ -6,7 +6,10 @@ import (
 )
 
 func (app *application) healthcheckHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "status: active")
-	fmt.Fprintf(w, "environment: %v\n", app.config.env)
-	fmt.Fprintf(w, "version: %v\n", version)
+	js := `{"status": "available", "environment": %q, "version": %q}`
+	js = fmt.Sprintf(js, app.config.env, version)
+
+	w.Header().Set("Content-Type", "application/json")
+
+	fmt.Fprint(w, js)
 }
